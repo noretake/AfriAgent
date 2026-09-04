@@ -1,5 +1,6 @@
 import { env } from "../config/env.js";
 import { MemoryStore } from "./memory.store.js";
+import { seedSampleHistory } from "./sample-data.js";
 import type { DataStore } from "./store.js";
 import { SupabaseStore } from "./supabase.store.js";
 
@@ -38,5 +39,8 @@ export async function seedStore(store: DataStore): Promise<void> {
   const policy = await store.getPolicy(user.id);
   if (!policy) {
     await store.createPolicy({ userId: user.id, ...DEFAULT_POLICY });
+  }
+  if (env.seedSampleData && !env.isTest) {
+    await seedSampleHistory(store, user.id);
   }
 }

@@ -103,3 +103,11 @@ create index if not exists idx_audit_logs_user_created on audit_logs (user_id, c
 create index if not exists idx_approvals_user_status on approvals (user_id, status);
 create index if not exists idx_intents_user_created on intents (user_id, created_at desc);
 create index if not exists idx_agent_messages_session on agent_messages (session_id, created_at);
+
+-- The server uses the service_role key; grant it full access (RLS is not used because
+-- authorization is enforced server-side).
+grant usage on schema public to service_role;
+grant all privileges on all tables in schema public to service_role;
+grant all privileges on all sequences in schema public to service_role;
+alter default privileges in schema public grant all on tables to service_role;
+alter default privileges in schema public grant all on sequences to service_role;

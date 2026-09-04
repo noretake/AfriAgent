@@ -136,7 +136,8 @@ export class SupabaseStore implements DataStore {
     if (error) throw new Error(error.message);
     return ((data as Row[]) ?? []).map(map);
   }
-  private async insert<T>(table: string, row: Row, map: (r: Row) => T): Promise<T> {
+  private async insert<T>(table: string, row: Row, map: (r: Row) => T, createdAt?: string): Promise<T> {
+    if (createdAt) row = { ...row, created_at: createdAt, ...(table === "transactions" ? { updated_at: createdAt } : {}) };
     const result = await this.one(this.client.from(table).insert(row).select().single(), map);
     if (!result) throw new Error(`Insert into ${table} returned no row`);
     return result;
@@ -232,6 +233,7 @@ export class SupabaseStore implements DataStore {
         status: intent.status,
       },
       mapIntent,
+      intent.createdAt,
     );
   }
   getIntent(id: string) {
@@ -253,6 +255,7 @@ export class SupabaseStore implements DataStore {
         approved_at: approval.approvedAt,
       },
       mapApproval,
+      approval.createdAt,
     );
   }
   getApproval(id: string) {
@@ -276,7 +279,7 @@ export class SupabaseStore implements DataStore {
     return this.one(this.client.from("approvals").update(row).eq("id", id).select().maybeSingle(), mapApproval);
   }
 
-  createTransaction(tx: Omit<Transaction, "id" | "createdAt" | "updatedAt">) {
+  createTransaction(tx: Omit<Transaction, "id" | "createdAt" | "updatedAt"> & { createdAt?: string }) {
     return this.insert(
       "transactions",
       {
@@ -294,6 +297,7 @@ export class SupabaseStore implements DataStore {
         failure_reason: tx.failureReason,
       },
       mapTransaction,
+      tx.createdAt,
     );
   }
   getTransaction(id: string) {
@@ -324,6 +328,7 @@ export class SupabaseStore implements DataStore {
       "audit_logs",
       { user_id: log.userId, event_type: log.eventType, metadata: log.metadata },
       mapAudit,
+      log.createdAt,
     );
   }
   listAuditLogs(userId: string, opts?: { limit?: number; eventTypes?: string[]; intentId?: string }) {
