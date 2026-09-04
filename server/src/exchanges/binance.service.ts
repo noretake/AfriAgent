@@ -112,7 +112,8 @@ export class BinanceService implements ExchangeService {
     const balances = await this.getBalance(userId);
     const positions = await Promise.all(
       balances.map(async (b) => {
-        const price = b.asset === QUOTE ? 1 : (await this.getMarketPrice(b.asset)).price;
+        // Assets without a USDT market (e.g. testnet placeholder tokens) are held at 0 value.
+        const price = b.asset === QUOTE ? 1 : await this.getMarketPrice(b.asset).then((m) => m.price).catch(() => 0);
         return { asset: b.asset, balance: b.total, price, valueUsd: round(b.total * price, 2), allocationPct: 0 };
       }),
     );
