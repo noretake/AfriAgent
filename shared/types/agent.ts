@@ -96,6 +96,7 @@ export interface HealthResponse {
   service: "afriagent";
   mode: "demo" | "live";
   storage: "memory" | "supabase";
+  exchange: string;
   aiProvider: string;
   timestamp: string;
 }

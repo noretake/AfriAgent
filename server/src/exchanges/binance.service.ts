@@ -54,12 +54,13 @@ interface OrderResponse {
  * documented integration point rather than an invented one.
  */
 export class BinanceService implements ExchangeService {
-  readonly name = "Binance";
+  readonly name: string;
   readonly mode = "live" as const;
   private readonly baseUrl: string;
 
   constructor(private readonly config: BinanceConfig) {
     this.baseUrl = config.baseUrl ?? "https://api.binance.com";
+    this.name = this.baseUrl.includes("testnet") ? "Binance Testnet" : "Binance";
   }
 
   get isConfigured(): boolean {

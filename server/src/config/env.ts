@@ -29,6 +29,7 @@ const EnvSchema = z.object({
   AI_MODEL: z.string().optional(),
   BINANCE_API_KEY: z.string().optional(),
   BINANCE_API_SECRET: z.string().optional(),
+  BINANCE_BASE_URL: z.string().url().optional(),
   BINANCE_MCP_ENDPOINT: z.string().optional(),
   APPROVAL_TTL_MINUTES: z.coerce.number().int().positive().default(10),
 });
