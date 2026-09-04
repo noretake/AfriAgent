@@ -76,8 +76,8 @@ export function evaluatePolicy(input: PolicyEvaluationInput): PolicyResult {
     name: "Daily Limit",
     passed: dailyOk,
     detail: dailyOk
-      ? `Today's volume would be ${usd(projectedDaily)} of the ${usd(policy.dailyLimitUsd)} daily limit.`
-      : `Today's volume ${usd(context.dailyVolumeUsd)} plus ${usd(intent.amountUsd)} would exceed the ${usd(policy.dailyLimitUsd)} daily limit.`,
+      ? `Today's executed + pending volume would be ${usd(projectedDaily)} of the ${usd(policy.dailyLimitUsd)} daily limit.`
+      : `Today's executed + pending volume ${usd(context.dailyVolumeUsd)} plus ${usd(intent.amountUsd)} would exceed the ${usd(policy.dailyLimitUsd)} daily limit.`,
     requested: projectedDaily,
     limit: policy.dailyLimitUsd,
   });
