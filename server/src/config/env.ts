@@ -21,6 +21,7 @@ const EnvSchema = z.object({
   PORT: z.coerce.number().int().positive().default(3001),
   CLIENT_URL: z.string().default("http://localhost:5173"),
   DEMO_MODE: boolFromEnv,
+  SEED_SAMPLE_DATA: boolFromEnv,
   SUPABASE_URL: z.string().optional(),
   SUPABASE_ANON_KEY: z.string().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
@@ -29,6 +30,7 @@ const EnvSchema = z.object({
   AI_MODEL: z.string().optional(),
   BINANCE_API_KEY: z.string().optional(),
   BINANCE_API_SECRET: z.string().optional(),
+  BINANCE_BASE_URL: z.string().url().optional(),
   BINANCE_MCP_ENDPOINT: z.string().optional(),
   APPROVAL_TTL_MINUTES: z.coerce.number().int().positive().default(10),
 });
@@ -42,9 +44,13 @@ const hasAi = Boolean(parsed.AI_PROVIDER && parsed.AI_API_KEY);
 // Demo mode is on unless explicitly disabled AND real exchange credentials exist.
 const demoMode = parsed.DEMO_MODE === undefined ? true : parsed.DEMO_MODE || !hasBinance;
 
+// Sample history is seeded in Demo Mode unless disabled; never by default against a live exchange.
+const seedSampleData = parsed.SEED_SAMPLE_DATA ?? demoMode;
+
 export const env = {
   ...parsed,
   demoMode,
+  seedSampleData,
   hasBinance,
   hasSupabase,
   hasAi,

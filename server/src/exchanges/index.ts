@@ -8,6 +8,7 @@ export function createExchange(): ExchangeService {
     return new BinanceService({
       apiKey: env.BINANCE_API_KEY,
       apiSecret: env.BINANCE_API_SECRET,
+      baseUrl: env.BINANCE_BASE_URL,
       mcpEndpoint: env.BINANCE_MCP_ENDPOINT,
     });
   }

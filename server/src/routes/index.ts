@@ -19,6 +19,7 @@ export function apiRouter(s: Services): Router {
       service: "afriagent",
       mode: s.demoMode ? "demo" : "live",
       storage: s.store.kind,
+      exchange: s.exchange.name,
       aiProvider: s.agent.parserName,
       timestamp: new Date().toISOString(),
     };

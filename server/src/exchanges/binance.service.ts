@@ -54,12 +54,13 @@ interface OrderResponse {
  * documented integration point rather than an invented one.
  */
 export class BinanceService implements ExchangeService {
-  readonly name = "Binance";
+  readonly name: string;
   readonly mode = "live" as const;
   private readonly baseUrl: string;
 
   constructor(private readonly config: BinanceConfig) {
     this.baseUrl = config.baseUrl ?? "https://api.binance.com";
+    this.name = this.baseUrl.includes("testnet") ? "Binance Testnet" : "Binance";
   }
 
   get isConfigured(): boolean {
@@ -100,21 +101,30 @@ export class BinanceService implements ExchangeService {
     return (await res.json()) as T;
   }
 
+  /** Price of every asset with a USDT market, from a single ticker call. */
+  private async usdtPrices(): Promise<Map<string, number>> {
+    const tickers = await this.publicGet<TickerPrice[]>("/api/v3/ticker/price", {});
+    const prices = new Map<string, number>([[QUOTE, 1]]);
+    for (const t of tickers) {
+      if (t.symbol.endsWith(QUOTE)) prices.set(t.symbol.slice(0, -QUOTE.length), Number(t.price));
+    }
+    return prices;
+  }
+
+  /** Non-zero balances, excluding assets with no USDT market (e.g. testnet placeholder tokens). */
   async getBalance(_userId: string): Promise<Balance[]> {
-    const account = await this.signedRequest<AccountInfo>("GET", "/api/v3/account", {});
+    const [account, prices] = await Promise.all([this.signedRequest<AccountInfo>("GET", "/api/v3/account", {}), this.usdtPrices()]);
     return account.balances
       .map((b) => ({ asset: b.asset, free: Number(b.free), locked: Number(b.locked), total: Number(b.free) + Number(b.locked) }))
-      .filter((b) => b.total > 0);
+      .filter((b) => b.total > 0 && prices.has(b.asset));
   }
 
   async getPortfolio(userId: string): Promise<Portfolio> {
-    const balances = await this.getBalance(userId);
-    const positions = await Promise.all(
-      balances.map(async (b) => {
-        const price = b.asset === QUOTE ? 1 : (await this.getMarketPrice(b.asset)).price;
-        return { asset: b.asset, balance: b.total, price, valueUsd: round(b.total * price, 2), allocationPct: 0 };
-      }),
-    );
+    const [balances, prices] = await Promise.all([this.getBalance(userId), this.usdtPrices()]);
+    const positions = balances.map((b) => {
+      const price = prices.get(b.asset) ?? 0;
+      return { asset: b.asset, balance: b.total, price, valueUsd: round(b.total * price, 2), allocationPct: 0 };
+    });
     const totalValueUsd = round(positions.reduce((s, p) => s + p.valueUsd, 0), 2);
     for (const p of positions) p.allocationPct = totalValueUsd > 0 ? round((p.valueUsd / totalValueUsd) * 100, 2) : 0;
     return { totalValueUsd, positions, updatedAt: new Date().toISOString(), mode: "live" };

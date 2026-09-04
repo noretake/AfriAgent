@@ -58,6 +58,10 @@ export function Layout() {
             <span>{health.data?.storage ?? "—"}</span>
           </div>
           <div className="flex justify-between">
+            <span>Exchange</span>
+            <span>{health.data?.exchange ?? "—"}</span>
+          </div>
+          <div className="flex justify-between">
             <span>AI</span>
             <span>{health.data?.aiProvider ?? "—"}</span>
           </div>

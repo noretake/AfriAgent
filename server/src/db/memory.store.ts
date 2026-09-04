@@ -84,7 +84,7 @@ export class MemoryStore implements DataStore {
   }
 
   async createIntent(intent: NewRecord<IntentRecord>) {
-    const record: IntentRecord = { ...intent, id: randomUUID(), createdAt: now() };
+    const record: IntentRecord = { ...intent, id: randomUUID(), createdAt: intent.createdAt ?? now() };
     this.intents.set(record.id, record);
     return record;
   }
@@ -99,7 +99,7 @@ export class MemoryStore implements DataStore {
   }
 
   async createApproval(approval: NewRecord<Approval>) {
-    const record: Approval = { ...approval, id: randomUUID(), createdAt: now() };
+    const record: Approval = { ...approval, id: randomUUID(), createdAt: approval.createdAt ?? now() };
     this.approvals.set(record.id, record);
     return record;
   }
@@ -121,8 +121,8 @@ export class MemoryStore implements DataStore {
     return a;
   }
 
-  async createTransaction(tx: Omit<Transaction, "id" | "createdAt" | "updatedAt">) {
-    const ts = now();
+  async createTransaction(tx: Omit<Transaction, "id" | "createdAt" | "updatedAt"> & { createdAt?: string }) {
+    const ts = tx.createdAt ?? now();
     const record: Transaction = { ...tx, id: randomUUID(), createdAt: ts, updatedAt: ts };
     this.transactions.set(record.id, record);
     return record;
@@ -147,7 +147,7 @@ export class MemoryStore implements DataStore {
   }
 
   async createAuditLog(log: NewRecord<AuditLog>) {
-    const record: AuditLog = { ...log, id: randomUUID(), createdAt: now() };
+    const record: AuditLog = { ...log, id: randomUUID(), createdAt: log.createdAt ?? now() };
     this.auditLogs.push(record);
     return record;
   }

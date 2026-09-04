@@ -30,7 +30,8 @@ export interface SecurityState {
   reason: string | null;
 }
 
-export type NewRecord<T> = Omit<T, "id" | "createdAt">;
+/** `createdAt` may be supplied (e.g. by seeders); stores default it to now. */
+export type NewRecord<T> = Omit<T, "id" | "createdAt"> & { createdAt?: string };
 
 export interface DataStore {
   readonly kind: "memory" | "supabase";
@@ -62,7 +63,7 @@ export interface DataStore {
   listApprovals(userId: string, status?: ApprovalStatus): Promise<Approval[]>;
   updateApproval(id: string, patch: Partial<Pick<Approval, "status" | "approvedAt">>): Promise<Approval | null>;
 
-  createTransaction(tx: Omit<Transaction, "id" | "createdAt" | "updatedAt">): Promise<Transaction>;
+  createTransaction(tx: Omit<Transaction, "id" | "createdAt" | "updatedAt"> & { createdAt?: string }): Promise<Transaction>;
   getTransaction(id: string): Promise<Transaction | null>;
   getTransactionByIntent(intentId: string): Promise<Transaction | null>;
   listTransactions(userId: string, opts?: { since?: string; limit?: number }): Promise<Transaction[]>;
