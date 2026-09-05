@@ -25,6 +25,7 @@ export interface Services {
   approvals: ApprovalService;
   agent: AgentService;
   demoMode: boolean;
+  authMode: "demo" | "supabase";
   resolveUser: () => Promise<User>;
 }
 
@@ -33,6 +34,7 @@ export interface ServiceOptions {
   exchange?: ExchangeService;
   parser?: IntentParser;
   demoMode?: boolean;
+  requireAuth?: boolean;
   approvalTtlMinutes?: number;
 }
 
@@ -49,7 +51,7 @@ export async function createServices(opts: ServiceOptions = {}): Promise<Service
   const transactions = new TransactionService(store);
   const security = new SecurityService(store, audit, {
     demoMode,
-    requireApproval: async () => (await store.getPolicy((await resolveUser()).id))?.requireApproval ?? true,
+    requireApproval: async (userId) => (await store.getPolicy(userId))?.requireApproval ?? true,
   });
   const policies = new PolicyService(store, transactions, portfolio, security, audit);
   const execution = new ExecutionService(store, exchange, transactions, policies, security, audit);
@@ -66,5 +68,6 @@ export async function createServices(opts: ServiceOptions = {}): Promise<Service
     return user;
   }
 
-  return { store, exchange, audit, portfolio, transactions, security, policies, execution, approvals, agent, demoMode, resolveUser };
+  const authMode = (opts.requireAuth ?? env.requireAuth) ? "supabase" : "demo";
+  return { store, exchange, audit, portfolio, transactions, security, policies, execution, approvals, agent, demoMode, authMode, resolveUser };
 }

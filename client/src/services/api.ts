@@ -15,6 +15,7 @@ import type {
   Transaction,
   TransactionDetail,
 } from "../../../shared/types";
+import { getAccessToken } from "./supabase";
 
 export class ApiError extends Error {
   constructor(
@@ -31,9 +32,14 @@ export class ApiError extends Error {
 const BASE = import.meta.env.VITE_API_URL ?? "/api";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const token = await getAccessToken();
   const res = await fetch(`${BASE}${path}`, {
     ...init,
-    headers: { "content-type": "application/json", ...(init?.headers ?? {}) },
+    headers: {
+      "content-type": "application/json",
+      ...(token ? { authorization: `Bearer ${token}` } : {}),
+      ...(init?.headers ?? {}),
+    },
   });
   const text = await res.text();
   const data = text ? (JSON.parse(text) as unknown) : null;

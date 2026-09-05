@@ -98,5 +98,7 @@ export interface HealthResponse {
   storage: "memory" | "supabase";
   exchange: string;
   aiProvider: string;
+  /** "supabase": requests need a Supabase Auth bearer token; "demo": single shared demo user. */
+  auth: "demo" | "supabase";
   timestamp: string;
 }

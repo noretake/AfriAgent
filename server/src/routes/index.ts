@@ -1,6 +1,7 @@
 import { Router } from "express";
 import type { HealthResponse } from "../../../shared/types/index.js";
-import { demoAuth } from "../middleware/auth.middleware.js";
+import { env } from "../config/env.js";
+import { demoAuth, supabaseAuth } from "../middleware/auth.middleware.js";
 import type { Services } from "../services.js";
 import { agentRoutes } from "./agent.routes.js";
 import { approvalRoutes } from "./approval.routes.js";
@@ -21,12 +22,17 @@ export function apiRouter(s: Services): Router {
       storage: s.store.kind,
       exchange: s.exchange.name,
       aiProvider: s.agent.parserName,
+      auth: s.authMode,
       timestamp: new Date().toISOString(),
     };
     res.json(payload);
   });
 
-  api.use(demoAuth(s.resolveUser));
+  api.use(
+    s.authMode === "supabase"
+      ? supabaseAuth({ supabaseUrl: env.SUPABASE_URL!, serviceRoleKey: env.SUPABASE_SERVICE_ROLE_KEY!, store: s.store })
+      : demoAuth(s.resolveUser),
+  );
   api.use(agentRoutes(s));
   api.use(portfolioRoutes(s));
   api.use(transactionRoutes(s));
