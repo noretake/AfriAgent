@@ -47,7 +47,7 @@ See `.env.example`. Everything is optional in Demo Mode.
 | `DEMO_MODE` | `true` (default) forces the Mock Binance exchange |
 | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` | Enables the PostgreSQL/Supabase store. Apply `server/src/db/schema.sql` then `server/src/db/seed.sql` first. Without these the in-memory store is used. |
 | `REQUIRE_AUTH` | Supabase Auth (email/password). Defaults to `true` whenever `DEMO_MODE=false`; the API then rejects requests without a valid `Authorization: Bearer <supabase access token>` and scopes policies, approvals, transactions and audit to the signed-in user. Needs `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`. |
-| `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | Frontend build-time vars that enable the login screen and attach the session token to API calls. |
+| `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | Frontend build-time vars that enable the login screen (email/password, Google, GitHub) and attach the session token to API calls. In Supabase → Authentication → URL Configuration set **Site URL** to the deployed frontend URL and add it to **Redirect URLs**; enable Google/GitHub under Providers with their OAuth client credentials. |
 | `AI_PROVIDER`, `AI_API_KEY`, `AI_MODEL` | `openai`-compatible or `anthropic` intent parsing. Without a key a deterministic rule-based parser handles the demo phrases. LLM output is always validated with Zod and falls back to the rule parser. |
 | `BINANCE_API_KEY`, `BINANCE_API_SECRET` | With `DEMO_MODE=false`, routes execution to Binance Spot REST. |
 | `BINANCE_MCP_ENDPOINT` | Reserved integration point for Binance Agent OS / MCP; not used until a verified spec is wired in. |

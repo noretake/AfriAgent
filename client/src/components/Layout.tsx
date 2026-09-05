@@ -18,6 +18,7 @@ export function Layout({ session }: { session: Session | null }) {
   const health = useHealth();
   const security = useSecurity();
   const stopped = security.data?.emergencyStop.active ?? false;
+  const needsSignIn = health.data?.auth === "supabase" && !session;
 
   return (
     <div className="flex min-h-screen">
@@ -78,12 +79,30 @@ export function Layout({ session }: { session: Session | null }) {
         )}
       </aside>
       <main className="flex-1 overflow-y-auto">
+        <div className="flex items-center justify-between gap-3 border-b border-slate-800 bg-slate-950/60 px-6 py-2 text-xs">
+          <div className="flex items-center gap-2 md:hidden">
+            <Activity className="h-4 w-4 text-brand-400" />
+            <span className="font-semibold">AfriAgent</span>
+          </div>
+          <div className="ml-auto flex items-center gap-3">
+            {session ? (
+              <>
+                <span className="hidden truncate text-slate-400 sm:inline">{session.user.email}</span>
+                <button type="button" className="btn-secondary gap-1 px-2 py-1" onClick={() => void signOut()}>
+                  <LogOut className="h-3.5 w-3.5" /> Sign out
+                </button>
+              </>
+            ) : (
+              <span className={needsSignIn ? "text-rose-300" : "text-slate-400"}>{needsSignIn ? "Not signed in" : "Demo user"}</span>
+            )}
+          </div>
+        </div>
         {health.data?.mode === "demo" && (
           <div className="border-b border-amber-900/50 bg-amber-950/40 px-6 py-2 text-xs text-amber-200">
             Demo Mode — simulated Binance exchange. No real funds move. Executions are labelled DEMO_EXECUTED.
           </div>
         )}
-        {health.data?.auth === "supabase" && !session && (
+        {needsSignIn && (
           <div className="border-b border-rose-900/60 bg-rose-950/50 px-6 py-2 text-xs text-rose-200">
             The API requires sign-in but this frontend has no VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY configured.
           </div>
