@@ -26,7 +26,9 @@ export function CopilotPage() {
   const invalidate = useInvalidateFinancial();
   const bottom = useRef<HTMLDivElement>(null);
 
-  useEffect(() => bottom.current?.scrollIntoView({ behavior: "smooth" }), [items]);
+  useEffect(() => {
+    bottom.current?.scrollIntoView({ behavior: "smooth" });
+  }, [items]);
 
   const send = async (text: string) => {
     const message = text.trim();
