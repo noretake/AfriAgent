@@ -22,6 +22,7 @@ const EnvSchema = z.object({
   CLIENT_URL: z.string().default("http://localhost:5173"),
   DEMO_MODE: boolFromEnv,
   SEED_SAMPLE_DATA: boolFromEnv,
+  REQUIRE_AUTH: boolFromEnv,
   SUPABASE_URL: z.string().optional(),
   SUPABASE_ANON_KEY: z.string().optional(),
   SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
@@ -47,10 +48,17 @@ const demoMode = parsed.DEMO_MODE === undefined ? true : parsed.DEMO_MODE || !ha
 // Sample history is seeded in Demo Mode unless disabled; never by default against a live exchange.
 const seedSampleData = parsed.SEED_SAMPLE_DATA ?? demoMode;
 
+// Supabase Auth is mandatory outside Demo Mode; it can be opted into for demo deployments.
+const requireAuth = parsed.REQUIRE_AUTH ?? !demoMode;
+if (requireAuth && !(parsed.SUPABASE_URL && parsed.SUPABASE_SERVICE_ROLE_KEY)) {
+  throw new Error("REQUIRE_AUTH (default outside DEMO_MODE) needs SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY to verify Supabase Auth tokens.");
+}
+
 export const env = {
   ...parsed,
   demoMode,
   seedSampleData,
+  requireAuth,
   hasBinance,
   hasSupabase,
   hasAi,

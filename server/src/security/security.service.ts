@@ -6,7 +6,7 @@ export class SecurityService {
   constructor(
     private readonly store: DataStore,
     private readonly audit: AuditService,
-    private readonly opts: { demoMode: boolean; requireApproval: () => Promise<boolean> },
+    private readonly opts: { demoMode: boolean; requireApproval: (userId: string) => Promise<boolean> },
   ) {}
 
   getState(userId: string): Promise<SecurityState> {
@@ -36,7 +36,7 @@ export class SecurityService {
 
   async status(userId: string): Promise<SecurityStatus> {
     const state = await this.getState(userId);
-    const requireApproval = await this.opts.requireApproval();
+    const requireApproval = await this.opts.requireApproval(userId);
     return {
       agent: state.emergencyStop ? "STOPPED" : "ACTIVE",
       marketData: "ENABLED",

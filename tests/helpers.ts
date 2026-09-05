@@ -17,6 +17,7 @@ export async function createTestContext(opts: { approvalTtlMinutes?: number } = 
     exchange,
     parser: new FallbackIntentParser(),
     demoMode: true,
+    requireAuth: false,
     approvalTtlMinutes: opts.approvalTtlMinutes ?? 10,
   });
   const user = await services.resolveUser();
