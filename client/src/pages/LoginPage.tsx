@@ -1,5 +1,6 @@
 import { Activity, Github, Wallet } from "lucide-react";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { supabase } from "../services/supabase";
 
 const redirectTo = () => window.location.origin;
@@ -118,6 +119,9 @@ export function LoginPage() {
         <button type="button" className="w-full text-center text-xs text-slate-400 hover:text-white" onClick={() => setMode(mode === "signin" ? "signup" : "signin")}>
           {mode === "signin" ? "No account? Create one" : "Already have an account? Sign in"}
         </button>
+        <Link to="/welcome" className="block text-center text-xs text-slate-500 hover:text-white">
+          ← What is AfriAgent?
+        </Link>
       </div>
     </div>
   );
