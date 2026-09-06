@@ -1,4 +1,4 @@
-import { Activity, Github } from "lucide-react";
+import { Activity, Github, Wallet } from "lucide-react";
 import { useState } from "react";
 import { supabase } from "../services/supabase";
 
@@ -47,6 +47,27 @@ export function LoginPage() {
     if (error) setError(error.message);
   };
 
+  const wallet = async () => {
+    if (!supabase) return;
+    setError(null);
+    if (!("ethereum" in window)) {
+      setError("No Ethereum wallet detected. Install MetaMask (or another EIP-1193 wallet) and reload.");
+      return;
+    }
+    setBusy(true);
+    try {
+      const { error } = await supabase.auth.signInWithWeb3({
+        chain: "ethereum",
+        statement: "Sign in to AfriAgent. This only proves you control this wallet; it never moves funds.",
+      });
+      if (error) setError(error.message);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Wallet sign-in was cancelled.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center p-4">
       <div className="card w-full max-w-sm space-y-5">
@@ -91,6 +112,9 @@ export function LoginPage() {
             <Github className="h-4 w-4" /> GitHub
           </button>
         </div>
+        <button type="button" className="btn-secondary w-full justify-center gap-2" disabled={busy} onClick={() => void wallet()}>
+          <Wallet className="h-4 w-4 text-brand-400" /> Sign in with Wallet
+        </button>
         <button type="button" className="w-full text-center text-xs text-slate-400 hover:text-white" onClick={() => setMode(mode === "signin" ? "signup" : "signin")}>
           {mode === "signin" ? "No account? Create one" : "Already have an account? Sign in"}
         </button>

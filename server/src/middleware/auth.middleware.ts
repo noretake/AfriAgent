@@ -1,4 +1,4 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient, type User as AuthUser } from "@supabase/supabase-js";
 import type { NextFunction, Request, RequestHandler, Response } from "express";
 import type { DataStore, User } from "../db/store.js";
 import { DEFAULT_POLICY } from "../db/client.js";
@@ -29,6 +29,28 @@ export interface SupabaseAuthOptions {
   supabaseUrl: string;
   serviceRoleKey: string;
   store: DataStore;
+}
+
+interface AuthMeta {
+  name?: string;
+  full_name?: string;
+  custom_claims?: { address?: string; chain?: string };
+}
+
+/**
+ * Maps a verified Supabase Auth user to the application identity (email + name).
+ * Web3 (wallet) users have no email, so their identity is the wallet address
+ * scoped to its chain, e.g. `0xabc…@wallet.ethereum`.
+ */
+export function identityFromAuthUser(user: AuthUser): { email: string; name: string } | null {
+  const meta = (user.user_metadata ?? null) as AuthMeta | null;
+  if (user.email) {
+    return { email: user.email.toLowerCase(), name: meta?.name ?? meta?.full_name ?? user.email.split("@")[0] };
+  }
+  const address = meta?.custom_claims?.address;
+  if (!address) return null;
+  const chain = meta?.custom_claims?.chain ?? "web3";
+  return { email: `${address.toLowerCase()}@wallet.${chain}`, name: `${address.slice(0, 6)}…${address.slice(-4)}` };
 }
 
 /**
@@ -65,11 +87,9 @@ export function supabaseAuth(opts: SupabaseAuthOptions): RequestHandler {
     client.auth
       .getUser(token)
       .then(async ({ data, error }) => {
-        const email = data.user?.email;
-        if (error || !email) throw new HttpError(401, "Invalid or expired session. Please sign in again.", "UNAUTHORIZED");
-        const meta = data.user.user_metadata as { name?: string; full_name?: string } | null;
-        const name = meta?.name ?? meta?.full_name ?? email.split("@")[0];
-        req.user = await provision(email.toLowerCase(), name);
+        const identity = error || !data.user ? null : identityFromAuthUser(data.user);
+        if (!identity) throw new HttpError(401, "Invalid or expired session. Please sign in again.", "UNAUTHORIZED");
+        req.user = await provision(identity.email, identity.name);
         next();
       })
       .catch(next);

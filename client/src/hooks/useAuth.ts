@@ -1,4 +1,4 @@
-import type { Session } from "@supabase/supabase-js";
+import type { Session, User } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
 import { supabase } from "../services/supabase";
 
@@ -24,6 +24,14 @@ export function useAuth(): AuthState {
   }, []);
 
   return { ready, session, configured: supabase !== null };
+}
+
+/** Email for email/OAuth users; shortened wallet address for Web3 users. */
+export function displayName(user: User): string {
+  if (user.email) return user.email;
+  const claims = user.user_metadata as { custom_claims?: { address?: string } } | undefined;
+  const address = claims?.custom_claims?.address;
+  return address ? `${address.slice(0, 6)}…${address.slice(-4)}` : "Wallet user";
 }
 
 export async function signOut(): Promise<void> {

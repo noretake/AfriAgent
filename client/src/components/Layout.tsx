@@ -2,7 +2,7 @@ import type { Session } from "@supabase/supabase-js";
 import { Activity, Bot, ClipboardCheck, LayoutDashboard, ListOrdered, LogOut, ScrollText, Shield, ShieldAlert } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 import { useHealth, useSecurity } from "../hooks/useApi";
-import { signOut } from "../hooks/useAuth";
+import { displayName, signOut } from "../hooks/useAuth";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -71,8 +71,8 @@ export function Layout({ session }: { session: Session | null }) {
         </div>
         {session && (
           <div className="mt-3 flex items-center justify-between gap-2 px-1 text-xs text-slate-400">
-            <span className="truncate" title={session.user.email}>{session.user.email}</span>
-            <button type="button" className="flex items-center gap-1 hover:text-white" onClick={() => void signOut()}>
+            <span className="truncate" title={displayName(session.user)}>{displayName(session.user)}</span>
+            <button type="button" className="btn-danger shrink-0 gap-1 px-2 py-1 text-xs" onClick={() => void signOut()}>
               <LogOut className="h-3.5 w-3.5" /> Sign out
             </button>
           </div>
@@ -87,8 +87,8 @@ export function Layout({ session }: { session: Session | null }) {
           <div className="ml-auto flex items-center gap-3">
             {session ? (
               <>
-                <span className="hidden truncate text-slate-400 sm:inline">{session.user.email}</span>
-                <button type="button" className="btn-secondary gap-1 px-2 py-1" onClick={() => void signOut()}>
+                <span className="hidden truncate text-slate-400 sm:inline">{displayName(session.user)}</span>
+                <button type="button" className="btn-danger gap-1 px-3 py-1.5 text-xs font-semibold shadow-lg shadow-rose-900/40" onClick={() => void signOut()}>
                   <LogOut className="h-3.5 w-3.5" /> Sign out
                 </button>
               </>
