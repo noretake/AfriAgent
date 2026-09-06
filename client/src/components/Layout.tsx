@@ -72,7 +72,7 @@ export function Layout({ session }: { session: Session | null }) {
         {session && (
           <div className="mt-3 flex items-center justify-between gap-2 px-1 text-xs text-slate-400">
             <span className="truncate" title={displayName(session.user)}>{displayName(session.user)}</span>
-            <button type="button" className="btn-danger shrink-0 gap-1 px-2 py-1 text-xs" onClick={() => void signOut()}>
+            <button type="button" className="btn-primary shrink-0 gap-1 px-2 py-1 text-xs" onClick={() => void signOut()}>
               <LogOut className="h-3.5 w-3.5" /> Sign out
             </button>
           </div>
@@ -88,7 +88,7 @@ export function Layout({ session }: { session: Session | null }) {
             {session ? (
               <>
                 <span className="hidden truncate text-slate-400 sm:inline">{displayName(session.user)}</span>
-                <button type="button" className="btn-danger gap-1 px-3 py-1.5 text-xs font-semibold shadow-lg shadow-rose-900/40" onClick={() => void signOut()}>
+                <button type="button" className="btn-primary gap-1 px-3 py-1.5 text-xs font-semibold" onClick={() => void signOut()}>
                   <LogOut className="h-3.5 w-3.5" /> Sign out
                 </button>
               </>
