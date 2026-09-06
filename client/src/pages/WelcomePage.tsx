@@ -58,7 +58,7 @@ export function WelcomePage({ signedIn, configured }: { signedIn: boolean; confi
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,rgba(16,185,129,0.18),transparent_55%)]" />
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-6 py-16 md:grid-cols-2 md:py-24">
-          <motion.div initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.12 } } }}>
+          <motion.div className="min-w-0" initial="hidden" animate="show" variants={{ show: { transition: { staggerChildren: 0.12 } } }}>
             <motion.span variants={fadeUp} className="inline-flex items-center gap-2 rounded-full border border-brand-800 bg-brand-950/40 px-3 py-1 text-xs text-brand-200">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-brand-400" /> Human-in-the-loop trading agent for Binance
             </motion.span>
@@ -92,7 +92,7 @@ export function WelcomePage({ signedIn, configured }: { signedIn: boolean; confi
               ))}
             </motion.dl>
           </motion.div>
-          <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="h-[360px] md:h-[480px]">
+          <motion.div initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }} className="h-[360px] min-w-0 w-full overflow-hidden md:h-[480px]">
             <Suspense fallback={<div className="h-full w-full animate-pulse rounded-full bg-slate-900/60" />}>
               <HeroScene />
             </Suspense>

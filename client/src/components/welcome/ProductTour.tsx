@@ -171,10 +171,10 @@ function AuditScreen() {
   return (
     <MockCard className="divide-y divide-slate-800 p-0">
       {rows.map(([type, detail], i) => (
-        <motion.div key={type} custom={i} variants={rise} initial="hidden" animate="show" className="flex items-center gap-3 px-3 py-2 text-xs">
-          <span className="h-1.5 w-1.5 rounded-full bg-brand-400" />
-          <span className="w-36 shrink-0 font-mono text-[10px] text-slate-400">{type}</span>
-          <span className="truncate text-slate-200">{detail}</span>
+        <motion.div key={type} custom={i} variants={rise} initial="hidden" animate="show" className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-0.5 px-3 py-2 text-xs sm:flex-nowrap">
+          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-brand-400" />
+          <span className="font-mono text-[10px] text-slate-400 sm:w-36 sm:shrink-0">{type}</span>
+          <span className="min-w-0 break-words text-slate-200 sm:truncate">{detail}</span>
         </motion.div>
       ))}
     </MockCard>
@@ -229,7 +229,7 @@ export function ProductTour() {
         })}
       </ol>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 shadow-2xl shadow-black/40">
+      <div className="min-w-0 overflow-hidden rounded-2xl border border-slate-800 bg-slate-950 shadow-2xl shadow-black/40">
         <div className="flex items-center gap-1.5 border-b border-slate-800 px-3 py-2">
           <span className="h-2.5 w-2.5 rounded-full bg-slate-700" />
           <span className="h-2.5 w-2.5 rounded-full bg-slate-700" />
@@ -255,7 +255,7 @@ export function ProductTour() {
               })}
             </nav>
           </aside>
-          <div className="flex-1 p-4">
+          <div className="min-w-0 flex-1 p-4">
             <AnimatePresence mode="wait">
               <motion.div key={step.key} initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -24 }} transition={{ duration: 0.3 }}>
                 <div className="mb-3 text-sm font-semibold">{step.label}</div>
