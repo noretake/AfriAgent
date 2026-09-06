@@ -69,4 +69,20 @@ describe("supabaseAuth middleware", () => {
     expect(req.user!.email).toBe("real@example.com");
     expect(req.user!.id).not.toBe("someone-else");
   });
+
+  it("provisions Web3 wallet users (no email) from the wallet address", async () => {
+    const address = "0xAbCdEf0123456789abcdef0123456789ABCDEF01";
+    getUser.mockResolvedValue({
+      data: { user: { email: undefined, user_metadata: { custom_claims: { address, chain: "ethereum" } } } },
+      error: null,
+    });
+    const { req } = await run(handler, "Bearer wallet");
+    expect(req.user).toMatchObject({ email: `${address.toLowerCase()}@wallet.ethereum`, name: "0xAbCd…EF01" });
+  });
+
+  it("rejects verified users with neither email nor wallet address", async () => {
+    getUser.mockResolvedValue({ data: { user: { email: undefined, user_metadata: {} } }, error: null });
+    const { err } = await run(handler, "Bearer odd");
+    expect(err).toMatchObject({ status: 401 });
+  });
 });
