@@ -2,8 +2,75 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root, .dark {
+  --slate-50: 248 250 252;
+  --slate-100: 241 245 249;
+  --slate-200: 226 232 240;
+  --slate-300: 203 213 225;
+  --slate-400: 148 163 184;
+  --slate-500: 100 116 139;
+  --slate-600: 71 85 105;
+  --slate-700: 51 65 85;
+  --slate-800: 30 41 59;
+  --slate-900: 15 23 42;
+  --slate-950: 2 6 23;
+  --brand-50: 236 253 245;
+  --brand-100: 209 250 229;
+  --brand-200: 167 243 208;
+  --brand-300: 110 231 183;
+  --brand-400: 52 211 153;
+  --brand-500: 16 185 129;
+  --brand-600: 5 150 105;
+  --brand-700: 4 120 87;
+  --brand-800: 6 95 70;
+  --brand-900: 6 78 59;
+  --brand-950: 2 44 34;
+  --white: 255 255 255;
+}
+.light {
+  --slate-50: 2 6 23;
+  --slate-100: 15 23 42;
+  --slate-200: 30 41 59;
+  --slate-300: 51 65 85;
+  --slate-400: 71 85 105;
+  --slate-500: 100 116 139;
+  --slate-600: 148 163 184;
+  --slate-700: 203 213 225;
+  --slate-800: 226 232 240;
+  --slate-900: 241 245 249;
+  --slate-950: 248 250 252;
+  --brand-50: 2 44 34;
+  --brand-100: 6 78 59;
+  --brand-200: 6 95 70;
+  --brand-300: 4 120 87;
+  --brand-400: 5 150 105;
+  --brand-500: 16 185 129;
+  --brand-600: 52 211 153;
+  --brand-700: 110 231 183;
+  --brand-800: 167 243 208;
+  --brand-900: 209 250 229;
+  --brand-950: 236 253 245;
+  --white: 15 23 42;
+}
+
+:root, .dark {
   color-scheme: dark;
+}
+.light {
+  color-scheme: light;
+}
+
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition:
+    background-color 0.45s ease,
+    border-color 0.45s ease,
+    color 0.45s ease,
+    fill 0.45s ease,
+    stroke 0.45s ease,
+    box-shadow 0.45s ease !important;
 }
 
 body {

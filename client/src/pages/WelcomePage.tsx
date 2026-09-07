@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Activity, ArrowRight, Bot, ClipboardCheck, Database, Lock, MessageSquareText, Octagon, ScrollText, Shield, Zap } from "lucide-react";
 import { Suspense, lazy } from "react";
 import { Link } from "react-router-dom";
+import { ThemeToggle } from "../components/ThemeToggle";
 import { ProductTour } from "../components/welcome/ProductTour";
 
 const HeroScene = lazy(() => import("../components/welcome/HeroScene").then((m) => ({ default: m.HeroScene })));
@@ -49,9 +50,12 @@ export function WelcomePage({ signedIn, configured }: { signedIn: boolean; confi
               Safety
             </a>
           </nav>
-          <Link to={ctaTo} className="btn-primary px-4 py-1.5 text-sm">
-            {signedIn ? "Dashboard" : configured ? "Sign in" : "Open app"}
-          </Link>
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+            <Link to={ctaTo} className="btn-primary px-4 py-1.5 text-sm">
+              {signedIn ? "Dashboard" : configured ? "Sign in" : "Open app"}
+            </Link>
+          </div>
         </div>
       </header>
 

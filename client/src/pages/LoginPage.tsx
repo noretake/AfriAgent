@@ -1,6 +1,7 @@
 import { Activity, Github, Wallet } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { ThemeToggle } from "../components/ThemeToggle";
 import { supabase } from "../services/supabase";
 
 const redirectTo = () => window.location.origin;
@@ -70,7 +71,8 @@ export function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center p-4">
+    <div className="relative flex min-h-screen items-center justify-center p-4">
+      <ThemeToggle className="absolute right-4 top-4" />
       <div className="card w-full max-w-sm space-y-5">
         <div className="flex items-center gap-2">
           <Activity className="h-6 w-6 text-brand-400" />

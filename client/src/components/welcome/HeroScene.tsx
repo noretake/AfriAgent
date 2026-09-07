@@ -2,6 +2,7 @@ import { Float, Line, OrbitControls, Stars } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import * as THREE from "three";
+import { useTheme } from "../../hooks/useTheme";
 
 const BRAND = "#34d399";
 const NODE_COUNT = 28;
@@ -82,12 +83,13 @@ function Orbit({ radius, speed, tilt, color }: { radius: number; speed: number; 
 }
 
 export function HeroScene() {
+  const { theme } = useTheme();
   return (
     <Canvas camera={{ position: [0, 0.6, 5.2], fov: 45 }} dpr={[1, 1.75]} gl={{ antialias: true, alpha: true }}>
       <ambientLight intensity={0.5} />
       <directionalLight position={[4, 5, 3]} intensity={1.4} />
       <pointLight position={[-4, -2, -3]} intensity={0.8} color={BRAND} />
-      <Stars radius={40} depth={20} count={1200} factor={3} saturation={0} fade speed={0.6} />
+      {theme === "dark" && <Stars radius={40} depth={20} count={1200} factor={3} saturation={0} fade speed={0.6} />}
       <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.4}>
         <Globe />
         <Orbit radius={2.35} speed={0.5} tilt={0.5} color="#f7931a" />
