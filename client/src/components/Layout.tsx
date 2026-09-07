@@ -3,6 +3,7 @@ import { Activity, Bot, ClipboardCheck, LayoutDashboard, ListOrdered, LogOut, Sc
 import { NavLink, Outlet } from "react-router-dom";
 import { useHealth, useSecurity } from "../hooks/useApi";
 import { displayName, signOut } from "../hooks/useAuth";
+import { ThemeToggle } from "./ThemeToggle";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -85,6 +86,7 @@ export function Layout({ session }: { session: Session | null }) {
             <span className="font-semibold">AfriAgent</span>
           </div>
           <div className="ml-auto flex items-center gap-3">
+            <ThemeToggle />
             {session ? (
               <>
                 <span className="hidden truncate text-slate-400 sm:inline">{displayName(session.user)}</span>

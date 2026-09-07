@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AfriAgent — AI that acts. You stay in control.</title>
+    <script>
+      (function () {
+        var t = localStorage.getItem("afriagent-theme");
+        if (t !== "dark" && t !== "light") t = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        document.documentElement.classList.add(t);
+      })();
+    </script>
   </head>
   <body class="bg-slate-950 text-slate-100">
     <div id="root"></div>
