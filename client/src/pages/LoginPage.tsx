@@ -72,7 +72,9 @@ export function LoginPage() {
 
   return (
     <div className="relative flex min-h-screen items-center justify-center p-4">
-      <ThemeToggle className="absolute right-4 top-4" />
+      <div className="absolute right-4 top-4">
+        <ThemeToggle />
+      </div>
       <div className="card w-full max-w-sm space-y-5">
         <div className="flex items-center gap-2">
           <Activity className="h-6 w-6 text-brand-400" />

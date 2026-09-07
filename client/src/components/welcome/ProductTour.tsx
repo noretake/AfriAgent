@@ -116,7 +116,7 @@ function ApprovalsScreen() {
             <div className="text-sm font-semibold">BUY $40 of BTC</div>
             <motion.span
               layout
-              className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${approved ? "bg-brand-500/20 text-brand-300" : "bg-amber-500/20 text-amber-300"}`}
+              className={`rounded-full px-2 py-0.5 text-[10px] font-medium ${approved ? "bg-brand-500/20 text-brand-300" : "bg-amber-500/20 text-amber-700 dark:text-amber-300"}`}
             >
               {approved ? "APPROVED → EXECUTING" : "PENDING · expires in 9:41"}
             </motion.span>
@@ -153,7 +153,7 @@ function ApprovalsScreen() {
             <div className="text-sm font-semibold">BUY $80 of BTC</div>
             <div className="text-[10px] text-slate-400">Exceeds max $50 per transaction</div>
           </div>
-          <span className="rounded-full bg-rose-500/20 px-2 py-0.5 text-[10px] font-medium text-rose-300">BLOCKED</span>
+          <span className="rounded-full bg-rose-500/20 px-2 py-0.5 text-[10px] font-medium text-rose-700 dark:text-rose-300">BLOCKED</span>
         </MockCard>
       </motion.div>
     </div>
